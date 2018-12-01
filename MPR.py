@@ -1,6 +1,6 @@
-# Implement BPR.
-# Rendle, Steffen, et al. BPR: Bayesian personalized ranking from implicit feedback.
-# Proceedings of the twenty-fifth conference on uncertainty in artificial intelligence. AUAI Press, 2009. 
+# Implement MPR.
+# Runlong Yu, et al. Multiple Pairwise Ranking with Implicit Feedback.
+# Proceedings of the 27th ACM International Conference on Information and Knowledge Management. ACM, 2018.
 # @author Runlong Yu, Mingyue Cheng, Weibo Gao
 
 from collections import defaultdict
