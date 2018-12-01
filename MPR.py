@@ -1,6 +1,6 @@
 # Implement MPR.
 # Runlong Yu, et al. Multiple Pairwise Ranking with Implicit Feedback.
-# Proceedings of the 27th ACM International Conference on Information and Knowledge Management. ACM, 2018.
+# Proceedings of the 27th ACM International Conference on Information and Knowledge Management. ACM CIKM, 2018.
 # @author Runlong Yu, Mingyue Cheng, Weibo Gao
 
 from collections import defaultdict
