@@ -1,6 +1,6 @@
 # Implement BPR.
-# Rendle, Steffen, et al. BPR: Bayesian personalized ranking from implicit feedback.
-# Proceedings of the twenty-fifth conference on uncertainty in artificial intelligence. AUAI Press, 2009. 
+# Steffen Rendle, et al. BPR: Bayesian personalized ranking from implicit feedback.
+# Proceedings of the twenty-fifth conference on uncertainty in artificial intelligence. AUAI, 2009. 
 # @author Runlong Yu, Mingyue Cheng, Weibo Gao
 
 import random
