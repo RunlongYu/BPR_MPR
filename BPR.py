@@ -95,7 +95,7 @@ class BPR:
         self.predict_ = predict_matrix.getA().reshape(-1)
         self.predict_ = pre_handel(user_ratings_train, self.predict_, self.item_count)
         auc_score = roc_auc_score(self.test, self.predict_)
-        print('auc:', auc_score)
+        print('AUC:', auc_score)
         # Top-K evaluation
         str(scores.topK_scores(self.test, self.predict_, 20, self.user_count, self.item_count))
 
