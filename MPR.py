@@ -19,8 +19,6 @@ class MPR_SS:
     train_count = 1000
     train_data_path = 'train.txt'
     test_data_path = 'test.txt'
-    first_flag = 1
-    iteration_interval = int(item_count * item_count)
     factor_ranking = np.random.rand(latent_factors, item_count)
     ranking_pro = np.random.rand(item_count)
     wheel = np.zeros(item_count)
@@ -144,7 +142,7 @@ class MPR_SS:
             self.test[i] = int(self.test[i])
         # training
         for i in range(self.train_count):
-            if i % self.iteration_interval == 0:
+            if random.randint(1, i+2) > i:
                 self.set_up()
             self.train(user_ratings_train)
         predict_matrix = self.predict(self.U, self.V)
