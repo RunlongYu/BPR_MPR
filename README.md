@@ -5,4 +5,4 @@ Implement Runlong Yu, et al. Multiple Pairwise Ranking with Implicit Feedback in
 
 Dataset describe: MovieLens100K; 943 Users; 1682 Items.
 
-![](D:\chrome\MPG.PNG)
+![](D:\chrome\MPR.PNG)
