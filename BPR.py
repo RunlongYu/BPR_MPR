@@ -15,7 +15,7 @@ class BPR:
     latent_factors = 20
     lr = 0.01
     reg = 0.01
-    train_count = 1000
+    train_count = 10000
     train_data_path = 'train.txt'
     test_data_path = 'test.txt'
     size_u_i = user_count * item_count
