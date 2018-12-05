@@ -9,14 +9,14 @@ import random
 from sklearn.metrics import roc_auc_score
 import scores
 
-class MPR_SS:
+class MPR:
     user_count = 943
     item_count = 1682
     latent_factors = 20
     lr = 0.01
     reg = 0.01
     lambda_mpr = 0.7
-    train_count = 1000
+    train_count = 10000
     train_data_path = 'train.txt'
     test_data_path = 'test.txt'
     factor_ranking = np.random.rand(latent_factors, item_count)
@@ -162,5 +162,5 @@ def pre_handel(set, predict, item_count):
     return predict
 
 if __name__ == '__main__':
-    mpr_ss = MPR_SS()
-    mpr_ss.main()
+    mpr = MPR()
+    mpr.main()
