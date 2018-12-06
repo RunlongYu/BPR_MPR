@@ -13,17 +13,19 @@ class MPR:
     user_count = 943
     item_count = 1682
     latent_factors = 20
-    lr = 0.01
-    reg = 0.01
+    lr = 0.1
+    reg = 0.1
+    # lambda_mpr can be tuned from 0.0 to 1.0
     lambda_mpr = 0.7
-    train_count = 10000
+    print(lambda_mpr)
+    train_count = 1000
     train_data_path = 'train.txt'
     test_data_path = 'test.txt'
     factor_ranking = np.random.rand(latent_factors, item_count)
     ranking_pro = np.random.rand(item_count)
     wheel = np.zeros(item_count)
     size_u_i = user_count * item_count
-    # latent_factors of U & V
+    # latent factors of U & V
     U = np.random.rand(user_count, latent_factors) * 0.01
     V = np.random.rand(item_count, latent_factors) * 0.01
     test_data = np.zeros((user_count, item_count))
@@ -59,12 +61,11 @@ class MPR:
             if u not in user_ratings_train.keys():
                 continue
             # sample positive items from the observed items
-            if len(user_ratings_train[u]) > 2:
-                i, p, pp = random.sample(user_ratings_train[u], 3)
-            else:
-                i = random.sample(user_ratings_train[u], 1)[0]
-                p = random.sample(user_ratings_train[u], 1)[0]
-                pp = random.sample(user_ratings_train[u], 1)[0]
+            i = random.sample(user_ratings_train[u], 1)[0]
+            p = random.sample(user_ratings_train[u], 1)[0]
+            pp = random.sample(user_ratings_train[u], 1)[0]
+            # adaptive sampler
+            q = int(self.sampling_Strategy(u))
             # sample negative items
             j = random.randint(1, self.item_count)
             while j in user_ratings_train[u]:
@@ -72,10 +73,6 @@ class MPR:
             qq = random.randint(1, self.item_count)
             while qq in user_ratings_train[u]:
                 qq = random.randint(1, self.item_count)
-            # adaptive sampler
-            q = int(self.sampling_Strategy(u))
-            while q in user_ratings_train[u]:
-                q = int(self.sampling_Strategy(u))
             u -= 1
             i -= 1
             pp -= 1
@@ -89,12 +86,11 @@ class MPR:
             r_uj = np.dot(self.U[u], self.V[j].T)
             r_uq = np.dot(self.U[u], self.V[j].T)
             r_uqq = np.dot(self.U[u], self.V[j].T)
-            x = self.lambda_mpr * (r_ui - r_uj - r_uq + r_uqq) + (1 - self.lambda_mpr) * (r_uq - r_uqq - r_up + r_upp)
-            mid = 1.0 / (1 + np.exp(x))
-            temp = self.U[u]
+            r_mp = self.lambda_mpr * (r_ui - r_uj - r_uq + r_uqq) + (1 - self.lambda_mpr) * (r_uq - r_uqq - r_up + r_upp)
+            mid = 1.0 / (1 + np.exp(r_mp))
             self.U[u] += -self.lr * (-mid * (self.V[i] - self.V[j]) + self.reg * self.U[u])
-            self.V[i] += -self.lr * (-mid * temp + self.reg * self.V[i])
-            self.V[j] += -self.lr * (-mid * (-temp) + self.reg * self.V[j])
+            self.V[i] += -self.lr * (-mid * self.U[u] + self.reg * self.V[i])
+            self.V[j] += -self.lr * (-mid * (-self.U[u]) + self.reg * self.V[j])
 
     def predict(self, user, item):
         predict = np.mat(user) * np.mat(item.T)
@@ -110,24 +106,26 @@ class MPR:
             self.ranking_pro[i + 1] = self.ranking_pro[i + 1] / sum
             self.wheel[i + 1] = self.wheel[i] + self.ranking_pro[i + 1]
 
-    def geometrics(self):
-        r = random.uniform(0, 1)
-        for i in range(self.item_count):
-            if self.wheel[i] > r:
-                return i
+    def samplewheel(self, r, l, h):
+        if h == l:
+            return h
+        if self.wheel[int((h+l)/2)] > r:
+            return self.samplewheel(r, l, int((h+l)/2))
+        if self.wheel[int((h+l)/2) + 1] < r:
+            return self.samplewheel(r, int((h+l)/2), h)
+        return int((h+l)/2) + 1
 
     def sampling_Strategy(self, u):
         u -= 1
-        # draw a position from geometrics distribution
-        position_r = self.geometrics()
-        while position_r > self.item_count:
-            position_r = self.geometrics()
+        # draw a position
+        r = random.uniform(0, 1)
+        position_r = self.samplewheel(r, 0, self.item_count-1)
         # sample a latent factor
         factorId = random.randint(0, self.latent_factors - 1)
         if self.U[u][factorId] > 0:
             return self.factor_ranking[factorId][int(position_r)]
         else:
-            return self.factor_ranking[factorId][int(position_r)]
+            return self.factor_ranking[factorId][int(self.item_count-1-position_r)]
 
     def main(self):
         user_ratings_train = self.load_data(self.train_data_path)
@@ -138,8 +136,6 @@ class MPR:
                     self.test[u * self.item_count + item] = 1
                 else:
                     self.test[u * self.item_count + item] = 0
-        for i in range(self.user_count * self.item_count):
-            self.test[i] = int(self.test[i])
         # training
         for i in range(self.train_count):
             if random.randint(1, i+2) > i:
@@ -152,13 +148,13 @@ class MPR:
         auc_score = roc_auc_score(self.test, self.predict_)
         print('AUC:', auc_score)
         # Top-K evaluation
-        str(scores.topK_scores(self.test, self.predict_, 20, self.user_count, self.item_count))
+        str(scores.topK_scores(self.test, self.predict_, 5, self.user_count, self.item_count))
 
 def pre_handel(set, predict, item_count):
     # Ensure the recommendation cannot be positive items in the training set.
     for u in set.keys():
         for j in set[u]:
-            predict[(u-1) * item_count + j - 1]= 0
+            predict[(u - 1) * item_count + j - 1] = 0
     return predict
 
 if __name__ == '__main__':
