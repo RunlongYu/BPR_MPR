@@ -13,9 +13,9 @@ class BPR:
     user_count = 943
     item_count = 1682
     latent_factors = 20
-    lr = 0.01
-    reg = 0.01
-    train_count = 10000
+    lr = 0.1
+    reg = 0.1
+    train_count = 1000
     train_data_path = 'train.txt'
     test_data_path = 'test.txt'
     size_u_i = user_count * item_count
@@ -67,10 +67,9 @@ class BPR:
             r_uj = np.dot(self.U[u], self.V[j].T)
             r_uij = r_ui - r_uj
             mid = 1.0 / (1 + np.exp(r_uij))
-            temp = self.U[u]
             self.U[u] += -self.lr * (-mid * (self.V[i] - self.V[j]) + self.reg * self.U[u])
-            self.V[i] += -self.lr * (-mid * temp + self.reg * self.V[i])
-            self.V[j] += -self.lr * (-mid * (-temp) + self.reg * self.V[j])
+            self.V[i] += -self.lr * (-mid * self.U[u] + self.reg * self.V[i])
+            self.V[j] += -self.lr * (-mid * (-self.U[u]) + self.reg * self.V[j])
 
     def predict(self, user, item):
         predict = np.mat(user) * np.mat(item.T)
@@ -85,8 +84,6 @@ class BPR:
                     self.test[u * self.item_count + item] = 1
                 else:
                     self.test[u * self.item_count + item] = 0
-        for i in range(self.user_count * self.item_count):
-            self.test[i] = int(self.test[i])
         # training
         for i in range(self.train_count):
             self.train(user_ratings_train)
@@ -97,13 +94,13 @@ class BPR:
         auc_score = roc_auc_score(self.test, self.predict_)
         print('AUC:', auc_score)
         # Top-K evaluation
-        str(scores.topK_scores(self.test, self.predict_, 20, self.user_count, self.item_count))
+        str(scores.topK_scores(self.test, self.predict_, 5, self.user_count, self.item_count))
 
 def pre_handel(set, predict, item_count):
     # Ensure the recommendation cannot be positive items in the training set.
     for u in set.keys():
         for j in set[u]:
-            predict[(u-1) * item_count + j - 1]= 0
+            predict[(u - 1) * item_count + j - 1] = 0
     return predict
 
 if __name__ == '__main__':
