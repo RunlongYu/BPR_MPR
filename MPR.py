@@ -13,7 +13,7 @@ class MPR:
     user_count = 943
     item_count = 1682
     latent_factors = 20
-    lr = 0.1
+    lr = 0.01
     reg = 0.01
     # lambda_mpr can be tuned from 0.0 to 1.0
     lambda_mpr = 0.7
