@@ -13,7 +13,7 @@ class BPR:
     user_count = 943
     item_count = 1682
     latent_factors = 20
-    lr = 0.1
+    lr = 0.01
     reg = 0.01
     train_count = 1000
     train_data_path = 'train.txt'
