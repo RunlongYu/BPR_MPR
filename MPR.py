@@ -14,7 +14,7 @@ class MPR:
     item_count = 1682
     latent_factors = 20
     lr = 0.1
-    reg = 0.1
+    reg = 0.01
     # lambda_mpr can be tuned from 0.0 to 1.0
     lambda_mpr = 0.7
     train_count = 1000
@@ -27,6 +27,7 @@ class MPR:
     # latent factors of U & V
     U = np.random.rand(user_count, latent_factors) * 0.01
     V = np.random.rand(item_count, latent_factors) * 0.01
+    biasV = np.random.rand(item_count) * 0.01
     test_data = np.zeros((user_count, item_count))
     test = np.zeros(size_u_i)
     predict_ = np.zeros(size_u_i)
@@ -79,17 +80,27 @@ class MPR:
             j -= 1
             q -= 1
             qq -= 1
-            r_ui = np.dot(self.U[u], self.V[i].T)
-            r_up = np.dot(self.U[u], self.V[p].T)
-            r_upp = np.dot(self.U[u], self.V[pp].T)
-            r_uj = np.dot(self.U[u], self.V[j].T)
-            r_uq = np.dot(self.U[u], self.V[q].T)
-            r_uqq = np.dot(self.U[u], self.V[qq].T)
+            r_ui = np.dot(self.U[u], self.V[i].T) + self.biasV[i]
+            r_up = np.dot(self.U[u], self.V[p].T) + self.biasV[p]
+            r_upp = np.dot(self.U[u], self.V[pp].T) + self.biasV[i]
+            r_uj = np.dot(self.U[u], self.V[j].T) + self.biasV[j]
+            r_uq = np.dot(self.U[u], self.V[q].T) + self.biasV[q]
+            r_uqq = np.dot(self.U[u], self.V[qq].T) + self.biasV[qq]
             r_mp = self.lambda_mpr * (r_ui - r_uj - r_uq + r_uqq) + (1 - self.lambda_mpr) * (r_uq - r_uqq - r_up + r_upp)
-            mid = 1.0 / (1 + np.exp(r_mp))
-            self.U[u] += -self.lr * (-mid * (self.V[i] - self.V[j]) + self.reg * self.U[u])
-            self.V[i] += -self.lr * (-mid * self.U[u] + self.reg * self.V[i])
-            self.V[j] += -self.lr * (-mid * (-self.U[u]) + self.reg * self.V[j])
+            loss_fun = - 1.0 / (1 + np.exp(r_mp))
+            self.U[u] += -self.lr * (loss_fun * (self.V[i] - self.V[j]) + self.reg * self.U[u])
+            self.V[i] += -self.lr * (loss_fun * self.lambda_mpr * self.U[u] + self.reg * self.V[i])
+            self.V[p] += -self.lr * (loss_fun * (self.lambda_mpr - 1) * self.U[u] + self.reg * self.V[p])
+            self.V[pp] += -self.lr * (loss_fun * (1 - self.lambda_mpr) * self.U[u] + self.reg * self.V[pp])
+            self.V[j] += -self.lr * (loss_fun * self.lambda_mpr * (- self.U[u]) + self.reg * self.V[j])
+            self.V[q] += -self.lr * (loss_fun * (1 - 2 * self.lambda_mpr) * self.U[u] + self.reg * self.V[q])
+            self.V[qq] += -self.lr * (loss_fun * (2 * self.lambda_mpr - 1) * self.U[u] + self.reg * self.V[qq])
+            self.biasV[i] += - self.lr * (loss_fun * self.lambda_mpr + self.biasV[i])
+            self.biasV[p] += - self.lr * (loss_fun * (self.lambda_mpr - 1) + self.biasV[p])
+            self.biasV[pp] += - self.lr * (loss_fun * (1 - self.lambda_mpr) + self.biasV[pp])
+            self.biasV[j] += - self.lr * (loss_fun * (-self.lambda_mpr) + self.biasV[j])
+            self.biasV[q] += - self.lr * (loss_fun * (1 - 2 * self.lambda_mpr) + self.biasV[q])
+            self.biasV[qq] += - self.lr * (loss_fun * (2 * self.lambda_mpr - 1) + self.biasV[qq])
 
     def predict(self, user, item):
         predict = np.mat(user) * np.mat(item.T)
