@@ -14,7 +14,7 @@ class BPR:
     item_count = 1682
     latent_factors = 20
     lr = 0.1
-    reg = 0.1
+    reg = 0.01
     train_count = 1000
     train_data_path = 'train.txt'
     test_data_path = 'test.txt'
@@ -22,6 +22,7 @@ class BPR:
     # latent_factors of U & V
     U = np.random.rand(user_count, latent_factors) * 0.01
     V = np.random.rand(item_count, latent_factors) * 0.01
+    biasV = np.random.rand(item_count) * 0.01
     test_data = np.zeros((user_count, item_count))
     test = np.zeros(size_u_i)
     predict_ = np.zeros(size_u_i)
@@ -63,13 +64,17 @@ class BPR:
             u -= 1
             i -= 1
             j -= 1
-            r_ui = np.dot(self.U[u], self.V[i].T)
-            r_uj = np.dot(self.U[u], self.V[j].T)
+            r_ui = np.dot(self.U[u], self.V[i].T) + self.biasV[i]
+            r_uj = np.dot(self.U[u], self.V[j].T) + self.biasV[j]
             r_uij = r_ui - r_uj
-            mid = 1.0 / (1 + np.exp(r_uij))
-            self.U[u] += -self.lr * (-mid * (self.V[i] - self.V[j]) + self.reg * self.U[u])
-            self.V[i] += -self.lr * (-mid * self.U[u] + self.reg * self.V[i])
-            self.V[j] += -self.lr * (-mid * (-self.U[u]) + self.reg * self.V[j])
+            loss_func = -1.0 / (1 + np.exp(r_uij))
+            # update U and V
+            self.U[u] += -self.lr * (loss_func * (self.V[i] - self.V[j]) + self.reg * self.U[u])
+            self.V[i] += -self.lr * (loss_func * self.U[u] + self.reg * self.V[i])
+            self.V[j] += -self.lr * (loss_func * (-self.U[u]) + self.reg * self.V[j])
+            # update biasV
+            self.biasV[i] += -self.lr * (loss_func + self.reg * self.biasV[i])
+            self.biasV[j] += -self.lr * (-loss_func + self.reg * self.biasV[j])
 
     def predict(self, user, item):
         predict = np.mat(user) * np.mat(item.T)
