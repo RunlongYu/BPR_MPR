@@ -80,11 +80,11 @@ class MPR:
             q -= 1
             qq -= 1
             r_ui = np.dot(self.U[u], self.V[i].T)
-            r_up = np.dot(self.U[u], self.V[i].T)
-            r_upp = np.dot(self.U[u], self.V[i].T)
+            r_up = np.dot(self.U[u], self.V[p].T)
+            r_upp = np.dot(self.U[u], self.V[pp].T)
             r_uj = np.dot(self.U[u], self.V[j].T)
-            r_uq = np.dot(self.U[u], self.V[j].T)
-            r_uqq = np.dot(self.U[u], self.V[j].T)
+            r_uq = np.dot(self.U[u], self.V[q].T)
+            r_uqq = np.dot(self.U[u], self.V[qq].T)
             r_mp = self.lambda_mpr * (r_ui - r_uj - r_uq + r_uqq) + (1 - self.lambda_mpr) * (r_uq - r_uqq - r_up + r_upp)
             mid = 1.0 / (1 + np.exp(r_mp))
             self.U[u] += -self.lr * (-mid * (self.V[i] - self.V[j]) + self.reg * self.U[u])
