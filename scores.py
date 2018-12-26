@@ -78,9 +78,9 @@ def topK_scores(test, predict, topk, user_count, item_count):
         MAPSum += AP / test_data_size
     print('MAP:', MAPSum / total_test_data_count)
     print('MRR:', MRRSum / total_test_data_count)
-    print('Prec@5:', PrecisionSum[4] / total_test_data_count)
-    print('Rec@5:', RecallSum[4] / total_test_data_count)
-    print('F1@5:', F1Sum[4] / total_test_data_count)
-    print('NDCG@5:', NDCGSum[4] / total_test_data_count)
-    print('1-call@5:', OneCallSum[4] / total_test_data_count)
+    print('Prec@5:', PrecisionSum[5] / total_test_data_count)
+    print('Rec@5:', RecallSum[5] / total_test_data_count)
+    print('F1@5:', F1Sum[5] / total_test_data_count)
+    print('NDCG@5:', NDCGSum[5] / total_test_data_count)
+    print('1-call@5:', OneCallSum[5] / total_test_data_count)
     return
