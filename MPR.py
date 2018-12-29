@@ -16,7 +16,7 @@ class MPR:
     lr = 0.01
     reg = 0.01
     # lambda_mpr can be tuned from 0.0 to 1.0
-    lambda_mpr = 0.7
+    lambda_mpr = 0.6
     train_count = 1000
     train_data_path = 'train.txt'
     test_data_path = 'test.txt'
