@@ -11,6 +11,6 @@ About MPR Framework:
 
 About Runlong Yu:
 
-LinkedIn: https://www.linkedin.com/in/runlongyu/
+LinkedIn: https://www.linkedin.com/in/runlongyu
 Facebook: https://www.facebook.com/YuRunlong
 
