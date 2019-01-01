@@ -158,7 +158,7 @@ class MPR:
         auc_score = roc_auc_score(self.test, self.predict_)
         print('AUC:', auc_score)
         # Top-K evaluation
-        str(scores.topK_scores(self.test, self.predict_, 5, self.user_count, self.item_count))
+        scores.topK_scores(self.test, self.predict_, 5, self.user_count, self.item_count)
 
 def pre_handel(set, predict, item_count):
     # Ensure the recommendation cannot be positive items in the training set.
