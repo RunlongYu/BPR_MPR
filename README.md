@@ -7,7 +7,7 @@ Dataset describe: MovieLens100K; 943 Users; 1682 Items.
 
 About MPR Framework:
 
-![avatar](http://pic.rsun.tech/MPR.PNG)
+![avatar](https://www.researchgate.net/profile/Runlong_Yu/publication/328436286/figure/fig1/AS:684703258521600@1540257386264/Illustration-of-preference-assumption_W640.jpg)
 
 About Runlong Yu:
 
