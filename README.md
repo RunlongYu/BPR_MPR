@@ -11,6 +11,8 @@ About MPR Framework:
 
 ![avatar](https://www.researchgate.net/profile/Runlong_Yu/publication/328436286/figure/fig1/AS:684703258521600@1540257386264/Illustration-of-preference-assumption_W640.jpg)
 
+More details: https://www.researchgate.net/profile/Runlong_Yu/publication/329800227_CIKM18PosterPresentations-100CMx70CMRYU/links/5c1b3cff458515a4c7eb1d45/CIKM18PosterPresentations-100CMx70CMRYU.pdf
+
 About Runlong Yu:
 
 LinkedIn: https://www.linkedin.com/in/runlongyu
