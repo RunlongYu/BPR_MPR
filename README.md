@@ -1,12 +1,12 @@
 # BPR_Bayesian-Personalized-Ranking_MPR_Multiple-Pairwise-Ranking
 
-- Implement Steffen Rendle, et al. Bayesian personalized ranking from implicit feedback (run BPR.py);  
-- Implement Runlong Yu, et al. Multiple Pairwise Ranking with Implicit Feedback (run MPR.py) in Python3.
+- Implement Steffen Rendle, et al. Bayesian personalized ranking from implicit feedback (run `BPR.py`);  
+- Implement Runlong Yu, et al. Multiple Pairwise Ranking with Implicit Feedback (run `MPR.py`) in Python3.
 
 ## Dataset describe: MovieLens100K; 943 Users; 1682 Items
 
 More details about MovieLens datasets at https://grouplens.org/datasets/movielens .  
-Our code does not depend on the datasets. Just split the dataset you are interested in into the training set and test set, replace the train.txt and test.txt files, you can run BPR and MPR easily.
+Our code does not depend on the datasets. Just split the dataset you are interested in into the training set and test set, replace the `train.txt` and `test.txt` files, you can run BPR and MPR easily.
 
 ## About MPR Framework:
 
