@@ -5,8 +5,8 @@
 
 ## Dataset describe: MovieLens100K; 943 Users; 1682 Items
 
-More details about MovieLens datasets at https://grouplens.org/datasets/movielens .  
-Our code does not depend on the datasets. Just split the dataset you are interested in into the training set and test set, replace the `train.txt` and `test.txt` files, you can run BPR and MPR easily.
+- More details about MovieLens datasets at https://grouplens.org/datasets/movielens .  
+- Our code does not depend on the datasets. Just split the dataset you are interested in into the training set and test set, replace the `train.txt` and `test.txt` files, you can run BPR and MPR easily.
 
 ## About MPR Framework:
 
@@ -21,13 +21,13 @@ More details about MPR see our paper or poster at https://www.researchgate.net/p
 ### Note:  
 In the MPR paper, the dataset is divided into different sets according to popularity, and the method is too dependent on the dataset. In the open source MPR code, we have used the negative sampling method (refer to AoBPR, DNS methods) instead of the method of data division, and achieved better results.
 
-AoBPR at https://dl.acm.org/citation.cfm?id=2556248 .  
-DNS at https://dl.acm.org/citation.cfm?id=2484126 .
+- AoBPR at https://dl.acm.org/citation.cfm?id=2556248 .  
+- DNS at https://dl.acm.org/citation.cfm?id=2484126 .
 
 ---
 
 ## About Runlong Yu:
 
-LinkedIn: https://www.linkedin.com/in/runlongyu  
-Facebook: https://www.facebook.com/YuRunlong
+- LinkedIn: https://www.linkedin.com/in/runlongyu  
+- Facebook: https://www.facebook.com/YuRunlong
 
