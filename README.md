@@ -14,7 +14,7 @@
 
 ![avatar](https://www.researchgate.net/profile/Runlong_Yu/publication/328436286/figure/fig1/AS:684703258521600@1540257386264/Illustration-of-preference-assumption_W640.jpg)
 
-More details about MPR see our paper or poster at https://www.researchgate.net/profile/Runlong_Yu .
+- More details about MPR see our paper or poster at https://www.researchgate.net/profile/Runlong_Yu .
 
 ---
 
