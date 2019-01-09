@@ -1,8 +1,16 @@
 # @author Runlong Yu, Mingyue Cheng, Weibo Gao
 
-import heapq
 import numpy as np
 import math
+
+def count(tup_list, tup_index):
+    count = 0
+    for x in range(tup_index, len(tup_list)):
+        if tup_list[x][1] == tup_list[tup_index][1]:
+            count += 1
+        else:
+            break
+    return count
 
 def topK_scores(test, predict, topk, user_count, item_count):
     PrecisionSum = np.zeros(topk+1)
@@ -14,6 +22,7 @@ def topK_scores(test, predict, topk, user_count, item_count):
     MRRSum = 0
     MAPSum = 0
     total_test_data_count = 0
+
     for k in range(1, topk+1):
         DCGbest[k] = DCGbest[k - 1]
         DCGbest[k] += 1.0 / math.log(k + 1)
@@ -30,11 +39,33 @@ def topK_scores(test, predict, topk, user_count, item_count):
             continue
         else:
             total_test_data_count += 1
-        predict_max_num_index_list = map(user_predict.index, heapq.nlargest(topk, user_predict))
-        predict_max_num_index_list = list(predict_max_num_index_list)
+
+        temp_dic = {}
+        x = 1
+        for temp in user_predict:
+            temp_dic[x] = temp
+            x += 1
+        temp_dic = sorted(temp_dic.items(), key = lambda x: x[1], reverse = True)
+        predict_max_num_index_list = []
+        total_count = 0
+        tup_index = 0
+        while total_count < topk:
+            index_count = count(temp_dic, tup_index)
+            if index_count > topk - total_count:
+                temp_lists = np.arange(index_count)
+                np.random.shuffle(temp_lists)
+                for temp_list in range(topk - total_count):
+                    predict_max_num_index_list.append(temp_dic[tup_index + temp_lists[temp_list]][0] - 1)
+                break
+            else:
+                for sum_num in range(0, index_count):
+                    predict_max_num_index_list.append(temp_dic[tup_index + index_count - 1][0] - 1)
+                total_count += index_count
+                tup_index = total_count
         hit_sum = 0
         DCG = np.zeros(topk + 1)
         DCGbest2 = np.zeros(topk + 1)
+
         for k in range(1, topk + 1):
             DCG[k] = DCG[k - 1]
             item_id = predict_max_num_index_list[k - 1] #
