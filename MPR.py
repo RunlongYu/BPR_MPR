@@ -34,16 +34,12 @@ class MPR:
 
     def load_data(self, path):
         user_ratings = defaultdict(set)
-        max_u_id = -1
-        max_i_id = -1
         with open(path, 'r') as f:
             for line in f.readlines():
                 u, i = line.split(" ")
                 u = int(u)
                 i = int(i)
                 user_ratings[u].add(i)
-                max_u_id = max(u, max_u_id)
-                max_i_id = max(i, max_i_id)
         return user_ratings
 
     def load_test_data(self, path):
